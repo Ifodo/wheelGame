@@ -268,8 +268,8 @@ body {
 /* Spin button */
 .spin-button {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
