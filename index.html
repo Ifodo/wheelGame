@@ -15,13 +15,16 @@
 <body>
     <div class="container">
         <div class="title">
+            <div class="logo">
+                <img src="images/logo.jpg" alt="iGetHouse Logo" class="logo-img">
+            </div>
             <h1>Spin & Win Real Estate Rewards</h1>
-            <p>Try your luck to win amazing property-related prizes!</p>
+            <p>Spin the wheel to win amazing property-related prizes!</p>
         </div>
 
         <div class="game-container">
             <!-- Prize Legend -->
-            <div class="prize-legend hidden" id="prize-section">
+            <div class="prize-legend" id="prize-section">
                 <h3>Available Prizes</h3>
                 <div class="legend-items">
                     <div class="legend-column">
@@ -44,7 +47,7 @@
                             <span class="prize-name">VIP Property Tour</span>
                         </div>
                         <div class="legend-item">
-                            <span class="color-dot" style="background: #f0f0f0;">5</span>
+                            <span class="color-dot" style="background: #025940;">5</span>
                             <span class="prize-name">Raffle Entry</span>
                         </div>
                         <div class="legend-item">
@@ -65,7 +68,7 @@
                 </div>
             </div>
             
-            <button id="open-wheel-btn" class="open-wheel-btn hidden">
+            <button id="open-wheel-btn" class="open-wheel-btn">
                 <i class="fas fa-gift"></i> Spin The Wheel!
             </button>
         </div>
@@ -103,7 +106,7 @@
     </div>
 
     <!-- Add tick sound for spinning -->
-    <audio id="tick-sound" src="tick.mp3" preload="auto"></audio>
+    <audio id="tick-sound" src="https://cdn.freesound.org/previews/270/270404_5123851-lq.mp3" preload="auto"></audio>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>

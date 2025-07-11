@@ -8,6 +8,53 @@ const analytics = {
 // Wheel configuration
 let theWheel = null;
 
+// Variables
+let spinning = false;
+let wheelInitialized = false;
+let resultModal = null;
+let wheelModal = null;
+let container = null;
+let audio = null;
+
+// Initialize when the document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize DOM elements
+    initializeDOMElements();
+    
+    // Initialize wheel
+    initializeWheel();
+    wheelInitialized = true;
+    
+    // Set up spin button click handler
+    document.getElementById('spin-button').addEventListener('click', startSpin);
+    
+    // Close modals when clicking outside
+    window.addEventListener('click', (event) => {
+        if (event.target === resultModal) {
+            hideModal(resultModal);
+        }
+        if (event.target === wheelModal) {
+            hideModal(wheelModal);
+        }
+    });
+});
+
+// Function to show modal with animation
+function showModal(modal) {
+    modal.style.display = 'flex';
+    // Trigger reflow
+    void modal.offsetHeight;
+    modal.classList.add('show');
+}
+
+// Function to hide modal with animation
+function hideModal(modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300); // Match the CSS transition duration
+}
+
 function initializeWheel() {
     theWheel = new Winwheel({
         'canvasId'       : 'wheel-canvas',
@@ -24,7 +71,7 @@ function initializeWheel() {
             {'fillStyle' : '#4BB4FF', 'text' : '5% Agency\nFees Discount', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
             {'fillStyle' : '#FF9E4B', 'text' : 'Free\nE-book', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
             {'fillStyle' : '#4BFF91', 'text' : 'VIP Property\nTour', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#f0f0f0', 'text' : 'Raffle\nEntry', 'textFontFamily': 'Arial', 'textFillStyle': '#000000'},
+            {'fillStyle' : '#025940', 'text' : 'Raffle\nEntry', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
             {'fillStyle' : '#4BFF91', 'text' : 'N100k\nGift Card', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
             {'fillStyle' : '#FF4B4B', 'text' : 'Priority\nAccess', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
             {'fillStyle' : '#FF9E4B', 'text' : 'Try\nAgain', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'}
@@ -69,15 +116,6 @@ function highlightSegment(segmentNumber) {
     theWheel.draw();
 }
 
-// Variables
-let spinning = false;
-let userDetails = null;
-let wheelInitialized = false;
-let resultModal = null;
-let wheelModal = null;
-let container = null;
-let audio = null;
-
 // Initialize DOM elements
 function initializeDOMElements() {
     resultModal = document.getElementById('result-modal');
@@ -87,17 +125,16 @@ function initializeDOMElements() {
 
     // Set up wheel modal controls
     document.getElementById('open-wheel-btn').addEventListener('click', () => {
-        wheelModal.style.display = 'block';
-        if (!wheelInitialized) {
-            initializeWheel();
-            wheelInitialized = true;
-        }
+        showModal(wheelModal);
     });
 
     // Close button functionality
     document.querySelector('.close-btn').addEventListener('click', () => {
-        wheelModal.style.display = 'none';
+        hideModal(wheelModal);
     });
+
+    // Set up spin button
+    document.getElementById('spin-button').addEventListener('click', startSpin);
 }
 
 // Function to handle spinning
@@ -161,7 +198,7 @@ function showResult(indicatedSegment) {
     // Add a delay before showing the result modal to let users see the highlighted segment
     setTimeout(() => {
         // Hide wheel modal and show result modal
-        wheelModal.style.display = 'none';
+        hideModal(wheelModal);
 
         // Show different content based on the result
         const modalContent = document.querySelector('#result-modal .modal-content');
@@ -192,29 +229,31 @@ function showResult(indicatedSegment) {
             });
         }
 
-        resultModal.style.display = 'block';
-
-        if (userDetails) {
-            storeLead(prizeText);
-        }
+        setTimeout(() => {
+            showModal(resultModal);
+        }, 300);
+        
+        updateAnalytics(prizeText);
     }, 1000);
 }
 
 // Function to handle retry
 function retryWheel() {
     // Close the result modal
-    resultModal.style.display = 'none';
+    hideModal(resultModal);
     
-    // Show the wheel modal again
-    wheelModal.style.display = 'block';
-    
-    // Reset the wheel for another spin
-    for (let i = 1; i <= theWheel.numSegments; i++) {
-        if (theWheel.segments[i].originalFillStyle) {
-            theWheel.segments[i].fillStyle = theWheel.segments[i].originalFillStyle;
+    // Show the wheel modal again after a short delay
+    setTimeout(() => {
+        showModal(wheelModal);
+        
+        // Reset the wheel for another spin
+        for (let i = 1; i <= theWheel.numSegments; i++) {
+            if (theWheel.segments[i].originalFillStyle) {
+                theWheel.segments[i].fillStyle = theWheel.segments[i].originalFillStyle;
+            }
         }
-    }
-    theWheel.draw();
+        theWheel.draw();
+    }, 300);
 }
 
 // Handle prize claim
@@ -223,9 +262,9 @@ function handleClaim(prize) {
     localStorage.setItem('conversions', analytics.conversions.toString());
     
     // Close the modal
-    resultModal.style.display = 'none';
+    hideModal(resultModal);
     
-    alert('Thank you! We will contact you shortly with your prize details.');
+    alert('Congratulations! You can claim your prize by contacting our support team.');
 }
 
 // Update analytics
@@ -241,126 +280,4 @@ function updateAnalytics(prize) {
         prizeStats: analytics.prizeStats,
         conversions: analytics.conversions
     });
-}
-
-// Store lead information
-function storeLead(prize) {
-    // Here you would typically send this to your backend
-    const lead = {
-        ...userDetails,
-        prize,
-        timestamp: new Date().toISOString()
-    };
-    
-    console.log('Lead captured:', lead);
-    // Add your API call here to store the lead
-}
-
-// Show wheel and hide form
-function showWheel() {
-    const leadForm = document.getElementById('lead-form');
-    const prizeSection = document.getElementById('prize-section');
-    const openWheelBtn = document.getElementById('open-wheel-btn');
-    const title = document.querySelector('.title');
-    
-    if (leadForm) {
-        // Add fade-out effect
-        leadForm.style.opacity = '0';
-        leadForm.style.transform = 'translateY(20px)';
-        
-        // Hide form after fade animation
-        setTimeout(() => {
-            leadForm.style.display = 'none';
-            
-            // Show title
-            if (title) {
-                title.style.display = 'block';
-            }
-
-            // Show prizes and spin button with animation
-            prizeSection.classList.remove('hidden');
-            openWheelBtn.classList.remove('hidden');
-            
-            // Trigger reflow
-            void prizeSection.offsetHeight;
-            void openWheelBtn.offsetHeight;
-            
-            // Add fade-in animation
-            prizeSection.classList.add('fade-in');
-            openWheelBtn.classList.add('fade-in');
-        }, 300);
-    }
-}
-
-// Create lead capture form with skip option
-function createLeadForm() {
-    // Hide the title initially
-    const title = document.querySelector('.title');
-    if (title) {
-        title.style.display = 'none';
-    }
-
-    const formHTML = `
-        <div class="lead-form" id="lead-form">
-            <h2>Enter Your Details to Play! 🎉</h2>
-            <form id="user-form">
-                <input type="text" id="name" placeholder="Your Name" required>
-                <input type="email" id="email" placeholder="Your Email" required>
-                <input type="tel" id="phone" placeholder="Phone Number (Optional)">
-                <select id="interest-area" required>
-                    <option value="">Select Property Interest Area</option>
-                    <option value="residential">Residential Property</option>
-                    <option value="commercial">Commercial Property</option>
-                    <option value="investment">Investment Property</option>
-                </select>
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-play-circle"></i> Continue to Spin
-                </button>
-            </form>
-            <button id="skip-btn" class="skip-btn">
-                <i class="fas fa-forward"></i> Skip & Play Now
-            </button>
-        </div>
-    `;
-    container.insertAdjacentHTML('afterbegin', formHTML);
-    
-    // Handle form submission
-    document.getElementById('user-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        userDetails = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            interestArea: document.getElementById('interest-area').value
-        };
-        showWheel();
-    });
-
-    // Handle skip button
-    document.getElementById('skip-btn').addEventListener('click', () => {
-        userDetails = null;
-        showWheel();
-    });
-}
-
-// Initialize game
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize DOM elements
-    initializeDOMElements();
-    
-    // Create lead form
-    createLeadForm();
-    
-    // Set up spin button click handler
-    document.getElementById('spin-button').addEventListener('click', startSpin);
-    
-    // Close modals when clicking outside
-    window.addEventListener('click', (event) => {
-        if (event.target === resultModal) {
-            resultModal.style.display = 'none';
-        }
-        if (event.target === wheelModal) {
-            wheelModal.style.display = 'none';
-        }
-    });
-}); 
+} 
