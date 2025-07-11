@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Spin the wheel to win exclusive real estate rewards - Free property valuations, discounts, and more!">
+    <title>Real Estate Rewards Wheel - Win Exclusive Property Deals!</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Winwheel.js and its dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="Winwheel.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1>Spin & Win Real Estate Rewards</h1>
+            <p>Try your luck to win amazing property-related prizes!</p>
+        </div>
+
+        <div class="game-container">
+            <!-- Prize Legend -->
+            <div class="prize-legend hidden" id="prize-section">
+                <h3>Available Prizes</h3>
+                <div class="legend-items">
+                    <div class="legend-column">
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #FF4B4B;">1</span>
+                            <span class="prize-name">Free Property Valuation</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #4BB4FF;">2</span>
+                            <span class="prize-name">5% Agency Fees Discount</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #FF9E4B;">3</span>
+                            <span class="prize-name">Free E-book</span>
+                        </div>
+                    </div>
+                    <div class="legend-column">
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #4BFF91;">4</span>
+                            <span class="prize-name">VIP Property Tour</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #f0f0f0;">5</span>
+                            <span class="prize-name">Raffle Entry</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #4BFF91;">6</span>
+                            <span class="prize-name">N100k Gift Card</span>
+                        </div>
+                    </div>
+                    <div class="legend-column">
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #FF4B4B;">7</span>
+                            <span class="prize-name">Priority Access</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="color-dot" style="background: #FF9E4B;">8</span>
+                            <span class="prize-name">Try Again</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="open-wheel-btn" class="open-wheel-btn hidden">
+                <i class="fas fa-gift"></i> Spin The Wheel!
+            </button>
+        </div>
+
+        <!-- Wheel Modal -->
+        <div id="wheel-modal" class="modal">
+            <div class="modal-content wheel-modal-content">
+                <span class="close-btn">&times;</span>
+                <div class="wheel-container">
+                    <div class="winner-indicator"></div>
+                    <canvas id='wheel-canvas' width='420' height='420'>
+                        Canvas not supported, use another browser.
+                    </canvas>
+                    <button id="spin-button" class="spin-button">SPIN!</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Result Modal -->
+        <div id="result-modal" class="modal">
+            <div class="modal-content">
+                <h2>Congratulations! 🎉</h2>
+                <p>You've won: <span id="prize-amount"></span></p>
+                <button id="claim-btn" class="claim-btn">
+                    <i class="fas fa-gift"></i> Claim Prize
+                </button>
+            </div>
+        </div>
+
+        <!-- Terms and Privacy Notice -->
+        <div class="terms">
+            <p>By participating, you agree to our <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></p>
+            <p class="disclaimer">Spin the wheel and win amazing prizes!</p>
+        </div>
+    </div>
+
+    <!-- Add tick sound for spinning -->
+    <audio id="tick-sound" src="tick.mp3" preload="auto"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
