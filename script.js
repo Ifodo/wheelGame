@@ -145,6 +145,12 @@ function startSpin() {
     const spinButton = document.getElementById('spin-button');
     spinButton.disabled = true;
     
+    // Stop any currently playing audio
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
+    
     // Reset all segments to their original colors before spinning
     for (let i = 1; i <= theWheel.numSegments; i++) {
         if (theWheel.segments[i].originalFillStyle) {
@@ -173,11 +179,15 @@ function startSpin() {
 
 // Play the tick sound
 function playSound() {
-    // Stop and rewind the sound if it already happens to be playing
     if (audio) {
-        audio.pause();
         audio.currentTime = 0;
-        audio.play();
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.warn('Audio playback failed:', error);
+            });
+        }
     }
 }
 
@@ -185,6 +195,12 @@ function playSound() {
 function showResult(indicatedSegment) {
     spinning = false;
     document.getElementById('spin-button').disabled = false;
+    
+    // Stop the audio
+    if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
 
     // Get the prize details
     const prizeText = indicatedSegment.text.replace('\n', ' ');
