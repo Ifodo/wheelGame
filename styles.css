@@ -197,7 +197,7 @@ body {
     height: 500px;
     padding: 40px;
     position: relative;
-    background: #000000;
+    background: #ffffff;
     border-radius: 15px;
     display: flex;
     justify-content: center;
@@ -239,6 +239,8 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0 auto;
+    background: #ffffff;
+    border-radius: 50%;
 }
 
 #wheel-canvas {
