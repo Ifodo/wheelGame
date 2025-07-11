@@ -281,8 +281,8 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     padding: 0;
     overflow: hidden;
-    background: transparent;
-    -webkit-tap-highlight-color: transparent;
+    background: #ffffff;
+    -webkit-tap-highlight-color: #ffffff;
     touch-action: manipulation;
 }
 
