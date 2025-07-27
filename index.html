@@ -11,8 +11,36 @@
     <!-- Winwheel.js and its dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="Winwheel.js"></script>
+    <style>
+        /* Iframe-specific styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        .container {
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        /* Message passing styles */
+        .message {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: #4BB4FF;
+            color: white;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
+    <div id="message" class="message"></div>
     <div class="container">
         <div class="title">
             <div class="logo">
@@ -112,5 +140,52 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Add iframe communication code
+        window.addEventListener('message', function(event) {
+            // Verify the origin
+            if (event.data && event.data.type === 'SPIN_WHEEL_EVENT') {
+                // Handle events from parent Wix site
+                handleWixMessage(event.data);
+            }
+        });
+
+        function handleWixMessage(data) {
+            switch(data.action) {
+                case 'SHOW_MESSAGE':
+                    showMessage(data.message);
+                    break;
+                case 'TRIGGER_SPIN':
+                    document.getElementById('spin-button').click();
+                    break;
+            }
+        }
+
+        function showMessage(message) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = message;
+            messageEl.style.display = 'block';
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // Send messages to parent Wix site
+        function notifyParent(data) {
+            window.parent.postMessage({
+                type: 'WHEEL_SPIN_RESULT',
+                ...data
+            }, '*');
+        }
+
+        // Modify your existing prize winning logic to notify parent
+        document.getElementById('claim-btn').addEventListener('click', function() {
+            const prize = document.getElementById('prize-amount').textContent;
+            notifyParent({
+                action: 'PRIZE_CLAIMED',
+                prize: prize
+            });
+        });
+    </script>
 </body>
 </html> 
