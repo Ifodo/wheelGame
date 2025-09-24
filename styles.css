@@ -16,18 +16,18 @@ body {
 }
 
 .container {
-    max-width: 1200px;
-    width: 100%;
+    max-width: 1000px;
+    width: 95%;
     background: white;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Logo styles */
 .logo {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .logo-img {
@@ -45,18 +45,18 @@ body {
 /* Title styles */
 .title {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .title h1 {
     color: #2c3e50;
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 2em;
+    margin-bottom: 8px;
 }
 
 .title p {
     color: #7f8c8d;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 /* Game container styles */
@@ -72,34 +72,43 @@ body {
 /* Prize legend base styles */
 .prize-legend {
     width: 100%;
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 20px;
+    max-width: 1200px;
+    margin: 10px auto;
+    padding: 15px;
     background: #f8f9fa;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+}
+
+.legend-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    padding: 0 10px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .prize-legend h3 {
     text-align: center;
     color: #2c3e50;
-    margin-bottom: 20px;
-    font-size: 1.5em;
+    margin-bottom: 10px;
+    font-size: 1.3em;
     font-weight: 600;
 }
 
 .legend-items {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    padding: 0 10px;
+    gap: 8px;
+    padding: 0 5px;
 }
 
 .legend-column {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .legend-item {
@@ -107,11 +116,12 @@ body {
     align-items: center;
     gap: 12px;
     padding: 12px 15px;
-    border-radius: 10px;
+    border-radius: 8px;
     background: white;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     cursor: pointer;
+    min-height: 60px;
 }
 
 .legend-item:hover {
@@ -134,11 +144,12 @@ body {
 }
 
 .prize-name {
-    font-size: 1em;
+    font-size: 0.95em;
     color: #2c3e50;
     font-weight: 500;
     flex: 1;
-    line-height: 1.3;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
 }
 
 /* Open wheel button */
@@ -155,6 +166,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-weight: 500;
 }
 
 .open-wheel-btn:hover {
@@ -242,6 +254,7 @@ body {
     background: #ffffff;
     border-radius: 50%;
 }
+
 
 #wheel-canvas {
     position: relative;
@@ -360,7 +373,7 @@ body {
 
 .claim-btn {
     padding: 12px 25px;
-    background: #2ecc71;
+    background: #025940;
     color: white;
     border: none;
     border-radius: 25px;
@@ -371,17 +384,223 @@ body {
     align-items: center;
     gap: 8px;
     margin: 20px auto 0;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(2, 89, 64, 0.2);
 }
 
 .claim-btn:hover {
-    background: #27ae60;
+    background: #036b4d;
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(2, 89, 64, 0.3);
+}
+
+/* WhatsApp contact styles */
+.whatsapp-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.contact-person {
+    text-align: center;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.contact-person strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-btn:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+}
+
+.prize-reminder {
+    margin: 15px 0;
+    padding: 10px;
+    background: #fff3cd;
+    border-radius: 5px;
+    color: #856404;
+}
+
+.close-claim-btn {
+    padding: 8px 15px;
+    background: #025940;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 15px auto 0;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(2, 89, 64, 0.2);
+}
+
+.close-claim-btn:hover {
+    background: #036b4d;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 12px rgba(2, 89, 64, 0.3);
+}
+
+/* Property tip styles */
+.tip-category {
+    margin: 15px 0;
+    text-align: center;
+}
+
+.category-label {
+    display: inline-block;
+    padding: 5px 15px;
+    background: #025940;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.tip-content {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.tip-description {
+    margin-top: 10px;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.tip-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.more-tips-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: #025940;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.more-tips-btn:hover {
+    background: #036b4d;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(2, 89, 64, 0.3);
+}
+
+@media (max-width: 480px) {
+    .tip-content {
+        padding: 10px;
+    }
+    
+    .category-label {
+        font-size: 0.85em;
+    }
+    
+    .tip-description {
+        font-size: 0.85em;
+    }
+    
+    .more-tips-btn {
+        font-size: 0.85em;
+        padding: 6px 15px;
+    }
+}
+
+/* Prize indicator styles */
+.prize-indicator {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+}
+
+.indicator-content {
+    background: #025940;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    box-shadow: 0 3px 10px rgba(2, 89, 64, 0.2);
+    transition: all 0.3s ease;
+}
+
+.indicator-content:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(2, 89, 64, 0.3);
+}
+
+.indicator-content i {
+    color: #FFD700;
+}
+
+#prize-sector {
+    font-weight: 600;
+    color: #FFD700;
+    margin-left: 2px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .prize-indicator {
+        bottom: 80px;
+    }
 }
 
 /* Terms section */
 .terms {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 10px;
     color: #7f8c8d;
 }
 
@@ -934,6 +1153,18 @@ body {
         width: 65px;
         height: 65px;
     }
+
+    .sector-number {
+        width: 20px;
+        height: 20px;
+        font-size: 0.8em;
+        transform: 
+            rotate(var(--rotation)) 
+            translateX(150px) 
+            rotate(calc(var(--rotation) * -1 - 15deg));
+        margin-left: -10px;
+        margin-top: -10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -955,6 +1186,18 @@ body {
     .spin-button {
         width: 60px;
         height: 60px;
+    }
+
+    .sector-number {
+        width: 18px;
+        height: 18px;
+        font-size: 0.75em;
+        transform: 
+            rotate(var(--rotation)) 
+            translateX(130px) 
+            rotate(calc(var(--rotation) * -1 - 15deg));
+        margin-left: -9px;
+        margin-top: -9px;
     }
 } 
 

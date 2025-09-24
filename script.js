@@ -1,3 +1,118 @@
+// Special prizes with short and full descriptions
+const specialPrizes = [
+    {
+        short: 'Décor\nMoodboard',
+        full: 'Personalised Home Décor Moodboard - Get a custom-designed mood board for your dream home interior!'
+    },
+    {
+        short: 'AI Home\nBlueprint',
+        full: 'My Dream Home AI Blueprint Generator - Visualize your perfect home with our AI-powered blueprint creator!'
+    },
+    {
+        short: 'Investment\nStarter Kit',
+        full: 'Property Investment Starter Kit - Digital Pack + ₦50k Voucher to kickstart your real estate journey!'
+    },
+    {
+        short: 'Coaching\nSession',
+        full: '1-on-1 Real Estate Coaching Session - Personal guidance from our expert property consultants!'
+    },
+    {
+        short: 'Free\nPhotoshoot',
+        full: 'Free Professional Photoshoot - Capture your new home purchased through our platform in stunning detail!'
+    }
+];
+
+// Shuffle special prizes on page load
+function shuffleSpecialPrizes() {
+    for (let i = specialPrizes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [specialPrizes[i], specialPrizes[j]] = [specialPrizes[j], specialPrizes[i]];
+    }
+}
+
+// Property tips categories and content
+const propertyTips = {
+    investment: [
+        'High ROI Areas:\nCheck Growth Zones',
+        'Rental Yield:\nAnalyze Returns',
+        'Market Timing:\nBest Buy Period',
+        'Property Type:\nMatch Market Need',
+        'Value Add:\nUpgrade Options'
+    ],
+    inspection: [
+        'Check Drainage:\nRainy Season Ready',
+        'Visit Different\nTimes of Day',
+        'Neighborhood:\nSafety Check',
+        'Power Supply:\nBackup Options',
+        'Water Source:\nReliability Test'
+    ],
+    legal: [
+        'Title Check:\nVerify Status',
+        'Land Use:\nZoning Rules',
+        'Survey Plan:\nConfirm Bounds',
+        'C of O Status:\nVerify Now',
+        'Building Plan:\nApproval Check'
+    ],
+    financial: [
+        'Hidden Costs:\nBe Prepared',
+        'Payment Plan:\nFlexible Terms',
+        'Mortgage Rate:\nCompare Banks',
+        'Tax Benefits:\nKnow Your Rights',
+        'Insurance:\nProtect Asset'
+    ],
+    location: [
+        'Schools Nearby:\nQuality Check',
+        'Transport Links:\nAccessibility',
+        'Future Projects:\nArea Growth',
+        'Social Amenities:\nConvenience',
+        'Work Distance:\nCommute Time'
+    ],
+    negotiation: [
+        'Market Price:\nResearch First',
+        'Comp Sales:\nKnow Values',
+        'Offer Strategy:\nBe Smart',
+        'Terms Power:\nLeverage Well',
+        'Agent Tips:\nPro Insights'
+    ]
+};
+
+// Function to get random property tip
+function getRandomPropertyTip() {
+    // Get random category
+    const categories = Object.keys(propertyTips);
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    
+    // Get random tip from category
+    const categoryTips = propertyTips[randomCategory];
+    return categoryTips[Math.floor(Math.random() * categoryTips.length)];
+}
+
+let currentSpecialPrizeIndex = 0;
+
+// Function to get the next special prize
+function getNextSpecialPrize() {
+    const prize = specialPrizes[currentSpecialPrizeIndex];
+    currentSpecialPrizeIndex = (currentSpecialPrizeIndex + 1) % specialPrizes.length;
+    return prize.short;
+}
+
+// Function to get full prize description
+function getFullPrizeDescription(shortText) {
+    const prize = specialPrizes.find(p => p.short === shortText);
+    return prize ? prize.full : shortText;
+}
+
+// Function to get random property tip
+function getRandomPropertyTip() {
+    // Get random category
+    const categories = Object.keys(propertyTips);
+    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    
+    // Get random tip from category
+    const categoryTips = propertyTips[randomCategory];
+    return categoryTips[Math.floor(Math.random() * categoryTips.length)];
+}
+
 // Analytics tracking
 const analytics = {
     totalSpins: parseInt(localStorage.getItem('totalSpins') || '0'),
@@ -18,6 +133,9 @@ let audio = null;
 
 // Initialize when the document is ready
 document.addEventListener('DOMContentLoaded', () => {
+    // Shuffle special prizes on load
+    shuffleSpecialPrizes();
+    
     // Initialize DOM elements
     initializeDOMElements();
     
@@ -55,7 +173,41 @@ function hideModal(modal) {
     }, 300); // Match the CSS transition duration
 }
 
+function updatePrizeSectorDisplay(sectorNumber) {
+    const prizeSectorElement = document.getElementById('prize-sector');
+    if (prizeSectorElement) {
+        prizeSectorElement.textContent = sectorNumber;
+    }
+}
+
 function initializeWheel() {
+    // Randomly choose which sector will have the special prize (1-8)
+    const specialPrizeSector = Math.floor(Math.random() * 8) + 1;
+    updatePrizeSectorDisplay(specialPrizeSector);
+    
+    // Get the initial special prize
+    const specialPrize = getNextSpecialPrize();
+    
+    // Create segments array with the special prize in the random sector
+    const segments = new Array(8).fill(null).map((_, index) => {
+        const sectorNum = index + 1;
+        if (sectorNum === specialPrizeSector) {
+            return {
+                'fillStyle' : '#FF4B4B',
+                'text' : `${sectorNum}. ${specialPrize}`,
+                'textFontFamily': 'Arial',
+                'textFillStyle': '#FFFFFF',
+                'isSpecialPrize': true
+            };
+        }
+        return {
+            'fillStyle' : ['#4BB4FF', '#FF9E4B', '#4BFF91', '#025940', '#4BFF91', '#FF4B4B', '#FF9E4B'][index % 7],
+            'text' : `${sectorNum}. ${getRandomPropertyTip()}`,
+            'textFontFamily': 'Arial',
+            'textFillStyle': '#FFFFFF'
+        };
+    });
+
     theWheel = new Winwheel({
         'canvasId'       : 'wheel-canvas',
         'outerRadius'    : 200,        // Outer radius
@@ -66,16 +218,7 @@ function initializeWheel() {
         'textMargin'     : 20,         // Margin for text
         'rotationAngle'  : 22.5,       // Rotate wheel so text is more centered in segments
         'numSegments'    : 8,          // Number of segments
-        'segments'       : [           // Define segments
-            {'fillStyle' : '#FF4B4B', 'text' : 'Free Property\nValuation', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#4BB4FF', 'text' : '5% Agency\nFees Discount', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#FF9E4B', 'text' : 'Free\nE-book', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#4BFF91', 'text' : 'VIP Property\nTour', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#025940', 'text' : 'Raffle\nEntry', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#4BFF91', 'text' : 'N100k\nGift Card', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#FF4B4B', 'text' : 'Priority\nAccess', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'},
-            {'fillStyle' : '#FF9E4B', 'text' : 'Try\nAgain', 'textFontFamily': 'Arial', 'textFillStyle': '#FFFFFF'}
-        ],
+        'segments'       : segments,
         'animation' : {
             'type'     : 'spinToStop',
             'duration' : 5,
@@ -204,6 +347,8 @@ function showResult(indicatedSegment) {
 
     // Get the prize details
     const prizeText = indicatedSegment.text.replace('\n', ' ');
+    // Remove the number prefix for display
+    const displayText = prizeText.replace(/^\d+\.\s+/, '');
     
     // Update analytics
     updateAnalytics(prizeText);
@@ -219,30 +364,52 @@ function showResult(indicatedSegment) {
         // Show different content based on the result
         const modalContent = document.querySelector('#result-modal .modal-content');
         
-        if (prizeText.toLowerCase().includes('try again')) {
+        if (indicatedSegment.isSpecialPrize) {
+            const fullPrizeText = getFullPrizeDescription(indicatedSegment.text);
             modalContent.innerHTML = `
-                <h2>Another Chance! 🎲</h2>
-                <p>You've got another chance to win amazing prizes!</p>
-                <button onclick="retryWheel()" class="claim-btn">
-                    <i class="fas fa-redo"></i> Spin Again
-                </button>
-            `;
-        } else {
-            modalContent.innerHTML = `
-                <h2>Congratulations! 🎉</h2>
-                <p>You've won: <span class="prize-text">${prizeText}</span></p>
-                <button onclick="handleClaim('${prizeText}')" class="claim-btn">
-                    <i class="fas fa-gift"></i> Claim Prize
+                <h2>🌟 Special Prize Won! 🌟</h2>
+                <p>Congratulations! You've won our featured prize:</p>
+                <p class="prize-text">${fullPrizeText}</p>
+                <button onclick="handleClaim('${fullPrizeText}')" class="claim-btn">
+                    <i class="fas fa-gift"></i> Claim Your Special Prize
                 </button>
             `;
 
-            // Trigger confetti effect for wins
+            // Extra special confetti effect for special prizes
             confetti({
-                particleCount: 100,
-                spread: 70,
+                particleCount: 150,
+                spread: 90,
                 origin: { y: 0.6 },
-                colors: ['#FF4B4B', '#4BB4FF', '#4BFF91', '#FFD700']
+                colors: ['#FFD700', '#FFA500', '#FF4B4B', '#4BB4FF']
             });
+        } else {
+            // Find the category of the tip
+            let tipCategory = '';
+            for (const [category, tips] of Object.entries(propertyTips)) {
+                if (tips.includes(indicatedSegment.text)) {
+                    tipCategory = category.charAt(0).toUpperCase() + category.slice(1);
+                    break;
+                }
+            }
+
+            modalContent.innerHTML = `
+                <h2>Property Insight! 💡</h2>
+                <div class="tip-category">
+                    <span class="category-label">${tipCategory} Tip</span>
+                </div>
+                <div class="tip-content">
+                    <p class="prize-text">${displayText}</p>
+                    <p class="tip-description">Use this tip to make better property decisions!</p>
+                </div>
+                <div class="tip-actions">
+                    <button onclick="retryWheel()" class="claim-btn">
+                        <i class="fas fa-redo"></i> Spin for More Tips
+                    </button>
+                    <a href="https://igethouse.ng" target="_blank" class="more-tips-btn">
+                        <i class="fas fa-home"></i> Visit iGetHouse
+                    </a>
+                </div>
+            `;
         }
 
         setTimeout(() => {
@@ -262,12 +429,30 @@ function retryWheel() {
     setTimeout(() => {
         showModal(wheelModal);
         
-        // Reset the wheel for another spin
+        // Choose new random sector for special prize
+        const newSpecialPrizeSector = Math.floor(Math.random() * 8) + 1;
+        updatePrizeSectorDisplay(newSpecialPrizeSector);
+        
+        // Remove special prize flag from all segments
         for (let i = 1; i <= theWheel.numSegments; i++) {
+            delete theWheel.segments[i].isSpecialPrize;
+        }
+        
+        // Update segments with new special prize location
+        for (let i = 1; i <= theWheel.numSegments; i++) {
+            if (i === newSpecialPrizeSector) {
+                theWheel.segments[i].text = `${i}. ${getNextSpecialPrize()}`;
+                theWheel.segments[i].isSpecialPrize = true;
+            } else {
+                theWheel.segments[i].text = `${i}. ${getRandomPropertyTip()}`;
+            }
+            
+            // Reset colors
             if (theWheel.segments[i].originalFillStyle) {
                 theWheel.segments[i].fillStyle = theWheel.segments[i].originalFillStyle;
             }
         }
+        
         theWheel.draw();
     }, 300);
 }
@@ -277,10 +462,39 @@ function handleClaim(prize) {
     analytics.conversions++;
     localStorage.setItem('conversions', analytics.conversions.toString());
     
-    // Close the modal
+    // Update the modal content to show WhatsApp contacts
+    const modalContent = document.querySelector('#result-modal .modal-content');
+    modalContent.innerHTML = `
+        <h2>Claim Your Prize! 🎁</h2>
+        <p>Contact any of our representatives on WhatsApp to claim your prize:</p>
+        
+        <div class="whatsapp-contacts">
+            <div class="contact-person">
+                <strong>Bisola Salami</strong><br>
+                <a href="https://wa.me/2349165226722" target="_blank" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> +234 916 522 6722
+                </a>
+            </div>
+            
+            <div class="contact-person">
+                <strong>Olayinka Okunola</strong><br>
+                <a href="https://wa.me/2348128532038" target="_blank" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> +234 812 853 2038
+                </a>
+            </div>
+        </div>
+        
+        <p class="prize-reminder">Your Prize: <span class="prize-text">${prize}</span></p>
+        
+        <button onclick="closeClaimModal()" class="close-claim-btn">
+            <i class="fas fa-times"></i> Close
+        </button>
+    `;
+}
+
+// Function to close the claim modal
+function closeClaimModal() {
     hideModal(resultModal);
-    
-    alert('Congratulations! You can claim your prize by contacting our support team.');
 }
 
 // Update analytics
