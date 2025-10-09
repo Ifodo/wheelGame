@@ -470,7 +470,7 @@ function handleClaim(prize) {
         
         <div class="whatsapp-contacts">
             <div class="contact-person">
-                <strong>Bisola Salami</strong><br>
+                <strong>miss Smart</strong><br>
                 <a href="https://wa.me/2349165226722" target="_blank" class="whatsapp-btn">
                     <i class="fab fa-whatsapp"></i> +234 916 522 6722
                 </a>

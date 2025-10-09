@@ -8,6 +8,32 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- WhatsApp floating button styles -->
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+        }
+        .whatsapp-float i {
+            font-size: 24px;
+        }
+    </style>
     <!-- Winwheel.js and its dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
     <script src="Winwheel.js"></script>
@@ -41,6 +67,11 @@
 </head>
 <body>
     <div id="message" class="message"></div>
+    <!-- WhatsApp Contact Button -->
+    <a href="https://wa.me/+2348188334400?text=Hi%20iGetHouse,%20I%20just%20played%20the%20prize%20wheel%20game%20and%20would%20like%20to%20claim%20my%20prize!" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+        <span>Contact Us</span>
+    </a>
     <div class="container">
         <div class="title">
             <div class="logo">
