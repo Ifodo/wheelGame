@@ -143,10 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeWheel();
     wheelInitialized = true;
     
-    // Set up spin button click handler
-    document.getElementById('spin-button').addEventListener('click', startSpin);
+    // Set up spin button handlers (both click and touch)
+    const spinButton = document.getElementById('spin-button');
+    spinButton.addEventListener('click', startSpin);
+    spinButton.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        startSpin();
+    });
     
-    // Close modals when clicking outside
+    // Close modals when clicking/tapping outside
     window.addEventListener('click', (event) => {
         if (event.target === resultModal) {
             hideModal(resultModal);
@@ -155,11 +160,45 @@ document.addEventListener('DOMContentLoaded', () => {
             hideModal(wheelModal);
         }
     });
+    
+    // Recalculate wheel on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (theWheel && !spinning) {
+                initializeWheel();
+            }
+        }, 250);
+    });
+    
+    // Prevent double-tap zoom on mobile
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (event) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+    
+    // Prevent pull-to-refresh on mobile
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (window.scrollY === 0 && e.touches[0].clientY > touchStartY) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 });
 
 // Function to show modal with animation
 function showModal(modal) {
     modal.style.display = 'flex';
+    document.body.classList.add('modal-open');
     // Trigger reflow
     void modal.offsetHeight;
     modal.classList.add('show');
@@ -170,6 +209,7 @@ function hideModal(modal) {
     modal.classList.remove('show');
     setTimeout(() => {
         modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
     }, 300); // Match the CSS transition duration
 }
 
@@ -181,6 +221,42 @@ function updatePrizeSectorDisplay(sectorNumber) {
 }
 
 function initializeWheel() {
+    // Get canvas element and calculate responsive size
+    const canvas = document.getElementById('wheel-canvas');
+    const container = canvas.parentElement;
+    
+    // Calculate responsive dimensions
+    let wheelSize, outerRadius, innerRadius, fontSize, textMargin;
+    
+    if (window.innerWidth <= 480) {
+        // Small mobile devices
+        wheelSize = Math.min(window.innerWidth * 0.85, 320);
+        outerRadius = wheelSize / 2.1;
+        innerRadius = wheelSize / 12;
+        fontSize = 11;
+        textMargin = 15;
+    } else if (window.innerWidth <= 768) {
+        // Tablets and larger phones
+        wheelSize = Math.min(window.innerWidth * 0.9, 380);
+        outerRadius = wheelSize / 2.1;
+        innerRadius = wheelSize / 11;
+        fontSize = 12;
+        textMargin = 18;
+    } else {
+        // Desktop
+        wheelSize = 420;
+        outerRadius = 200;
+        innerRadius = 35;
+        fontSize = 14;
+        textMargin = 20;
+    }
+    
+    // Set canvas size
+    canvas.width = wheelSize;
+    canvas.height = wheelSize;
+    canvas.style.width = wheelSize + 'px';
+    canvas.style.height = wheelSize + 'px';
+    
     // Randomly choose which sector will have the special prize (1-8)
     const specialPrizeSector = Math.floor(Math.random() * 8) + 1;
     updatePrizeSectorDisplay(specialPrizeSector);
@@ -210,14 +286,14 @@ function initializeWheel() {
 
     theWheel = new Winwheel({
         'canvasId'       : 'wheel-canvas',
-        'outerRadius'    : 200,        // Outer radius
-        'innerRadius'    : 35,         // Inner radius
-        'textFontSize'   : 14,         // Font size
-        'textOrientation': 'horizontal', // Changed to horizontal
-        'textAlignment'  : 'center',    // Center align the text
-        'textMargin'     : 20,         // Margin for text
-        'rotationAngle'  : 22.5,       // Rotate wheel so text is more centered in segments
-        'numSegments'    : 8,          // Number of segments
+        'outerRadius'    : outerRadius,
+        'innerRadius'    : innerRadius,
+        'textFontSize'   : fontSize,
+        'textOrientation': 'horizontal',
+        'textAlignment'  : 'center',
+        'textMargin'     : textMargin,
+        'rotationAngle'  : 22.5,
+        'numSegments'    : 8,
         'segments'       : segments,
         'animation' : {
             'type'     : 'spinToStop',
