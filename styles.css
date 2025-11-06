@@ -446,6 +446,13 @@ body {
     color: #2c3e50;
 }
 
+.contact-person span {
+    display: block;
+    margin-bottom: 8px;
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
 .whatsapp-btn {
     display: inline-flex;
     align-items: center;
@@ -578,6 +585,26 @@ body {
     animation: fadeIn 0.3s ease;
 }
 
+@media (max-width: 768px) {
+    .prize-indicator {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        margin: 0 auto 12px;
+        padding: 8px 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 0 0 12px 12px;
+        margin-bottom: 12px;
+    }
+    
+    .prize-legend {
+        position: relative;
+        padding-top: 0;
+    }
+}
+
 .indicator-content {
     background: #025940;
     color: white;
@@ -617,14 +644,6 @@ body {
     }
 }
 
-@media (max-width: 768px) {
-    .prize-indicator {
-        bottom: 80px;
-        left: 10px;
-        right: 10px;
-        position: fixed;
-    }
-}
 
 /* Terms section */
 .terms {
@@ -842,10 +861,6 @@ body.modal-open {
         width: 100%;
         max-width: 280px;
         justify-content: center;
-    }
-
-    .prize-indicator {
-        margin: 8px auto 12px;
     }
 
     .indicator-content {

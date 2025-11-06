@@ -546,7 +546,8 @@ function handleClaim(prize) {
         
         <div class="whatsapp-contacts">
             <div class="contact-person">
-                <strong>miss Smart</strong><br>
+                <strong>Miss Smart</strong><br>
+                <span>Phone: +234 916 522 6722</span><br>
                 <a href="https://wa.me/2349165226722" target="_blank" class="whatsapp-btn">
                     <i class="fab fa-whatsapp"></i> +234 916 522 6722
                 </a>
@@ -554,6 +555,7 @@ function handleClaim(prize) {
             
             <div class="contact-person">
                 <strong>Olayinka Okunola</strong><br>
+                <span>Phone: +234 812 853 2038</span><br>
                 <a href="https://wa.me/2348128532038" target="_blank" class="whatsapp-btn">
                     <i class="fab fa-whatsapp"></i> +234 812 853 2038
                 </a>
