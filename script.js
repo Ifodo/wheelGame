@@ -538,6 +538,9 @@ function handleClaim(prize) {
     analytics.conversions++;
     localStorage.setItem('conversions', analytics.conversions.toString());
     
+    // Encode the prize text for WhatsApp URL
+    const encodedPrize = encodeURIComponent(`Hi! I just won a prize from the iGetHouse Spin & Win game:\n\n${prize}\n\nPlease help me claim my prize.`);
+    
     // Update the modal content to show WhatsApp contacts
     const modalContent = document.querySelector('#result-modal .modal-content');
     modalContent.innerHTML = `
@@ -548,7 +551,7 @@ function handleClaim(prize) {
             <div class="contact-person">
                 <strong>Miss Smart</strong><br>
                 <span>Phone: +234 916 522 6722</span><br>
-                <a href="https://wa.me/2349165226722" target="_blank" class="whatsapp-btn">
+                <a href="https://wa.me/2349165226722?text=${encodedPrize}" target="_blank" class="whatsapp-btn">
                     <i class="fab fa-whatsapp"></i> +234 916 522 6722
                 </a>
             </div>
@@ -556,7 +559,7 @@ function handleClaim(prize) {
             <div class="contact-person">
                 <strong>Olayinka Okunola</strong><br>
                 <span>Phone: +234 812 853 2038</span><br>
-                <a href="https://wa.me/2348128532038" target="_blank" class="whatsapp-btn">
+                <a href="https://wa.me/2348128532038?text=${encodedPrize}" target="_blank" class="whatsapp-btn">
                     <i class="fab fa-whatsapp"></i> +234 812 853 2038
                 </a>
             </div>
