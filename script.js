@@ -442,14 +442,24 @@ function showResult(indicatedSegment) {
         
         if (indicatedSegment.isSpecialPrize) {
             const fullPrizeText = getFullPrizeDescription(indicatedSegment.text);
+            // Escape HTML and quotes for safe display
+            const escapedPrizeText = fullPrizeText.replace(/'/g, "&#39;").replace(/"/g, "&quot;");
             modalContent.innerHTML = `
                 <h2>🌟 Special Prize Won! 🌟</h2>
                 <p>Congratulations! You've won our featured prize:</p>
-                <p class="prize-text">${fullPrizeText}</p>
-                <button onclick="handleClaim('${fullPrizeText}')" class="claim-btn">
+                <p class="prize-text">${escapedPrizeText}</p>
+                <button class="claim-btn" data-prize="${escapedPrizeText.replace(/"/g, '&quot;')}">
                     <i class="fas fa-gift"></i> Claim Your Special Prize
                 </button>
             `;
+            
+            // Attach event listener to the claim button
+            setTimeout(() => {
+                const claimBtn = modalContent.querySelector('.claim-btn');
+                if (claimBtn) {
+                    claimBtn.addEventListener('click', () => handleClaim(fullPrizeText));
+                }
+            }, 0);
 
             // Extra special confetti effect for special prizes
             confetti({
@@ -538,8 +548,14 @@ function handleClaim(prize) {
     analytics.conversions++;
     localStorage.setItem('conversions', analytics.conversions.toString());
     
-    // Encode the prize text for WhatsApp URL
-    const encodedPrize = encodeURIComponent(`Hi! I just won a prize from the iGetHouse Spin & Win game:\n\n${prize}\n\nPlease help me claim my prize.`);
+    // Clean and encode the prize text for WhatsApp URL
+    // Replace newlines with spaces and clean up the text
+    const cleanPrizeText = prize.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+    const whatsappMessage = `Hi! I just won a prize from the iGetHouse Spin & Win game:\n\n${cleanPrizeText}\n\nPlease help me claim my prize.`;
+    const encodedPrize = encodeURIComponent(whatsappMessage);
+    
+    // Escape HTML for safe display
+    const escapedPrize = prize.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     
     // Update the modal content to show WhatsApp contacts
     const modalContent = document.querySelector('#result-modal .modal-content');
@@ -551,32 +567,43 @@ function handleClaim(prize) {
             <div class="contact-person">
                 <strong>Miss Smart</strong><br>
                 <span>Phone: +234 916 522 6722</span><br>
-                <a href="https://wa.me/2349165226722?text=${encodedPrize}" target="_blank" class="whatsapp-btn">
-                    <i class="fab fa-whatsapp"></i> +234 916 522 6722
+                <a href="https://wa.me/2349165226722?text=${encodedPrize}" target="_blank" class="whatsapp-btn" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
                 </a>
             </div>
             
             <div class="contact-person">
                 <strong>Olayinka Okunola</strong><br>
                 <span>Phone: +234 812 853 2038</span><br>
-                <a href="https://wa.me/2348128532038?text=${encodedPrize}" target="_blank" class="whatsapp-btn">
-                    <i class="fab fa-whatsapp"></i> +234 812 853 2038
+                <a href="https://wa.me/2348128532038?text=${encodedPrize}" target="_blank" class="whatsapp-btn" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp"></i> Chat on WhatsApp
                 </a>
             </div>
         </div>
         
-        <p class="prize-reminder">Your Prize: <span class="prize-text">${prize}</span></p>
+        <p class="prize-reminder">Your Prize: <span class="prize-text">${escapedPrize}</span></p>
         
-        <button onclick="closeClaimModal()" class="close-claim-btn">
+        <button class="close-claim-btn">
             <i class="fas fa-times"></i> Close
         </button>
     `;
+    
+    // Attach event listener to close button
+    setTimeout(() => {
+        const closeBtn = modalContent.querySelector('.close-claim-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeClaimModal);
+        }
+    }, 0);
 }
 
-// Function to close the claim modal
+// Function to close the claim modal (made globally accessible)
 function closeClaimModal() {
     hideModal(resultModal);
 }
+
+// Make function globally accessible
+window.closeClaimModal = closeClaimModal;
 
 // Update analytics
 function updateAnalytics(prize) {
